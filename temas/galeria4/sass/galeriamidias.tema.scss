@@ -1,0 +1,53 @@
+// Configurações ------------------------------------------------------------ //
+$plugin: '.__jQuery-galeriaMidias';
+$tema: '.galeria4';
+
+// Fontes ------------------------------------------------------------------- //
+@font-face {
+    font-family: 'Savoye LET';
+    src: url('fontes/savoye-let.ttf');
+}
+
+// Tema --------------------------------------------------------------------- //
+#{$plugin}#{$tema} {
+    // Tamanho
+    width: 100%;
+    height: 100vh;
+
+    // Posicionamento
+    position: relative;
+
+    > figure, > video {
+        // Tamanho
+        width: 100%;
+        height: 100%;
+
+        // Posicionamento
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        // Visual
+        overflow: hidden;
+
+        &:not(:first-child) {
+            // Visual
+            display: none;
+        }
+
+        > img {
+            // Tamanho
+            width: auto;
+            height: 100%;
+
+            // Posicionamento
+            position: relative;
+            left: 50%;
+
+            // Transformar
+            transform: translateX(-50%);
+        }
+    }
+
+    @import 'componentes/*';
+}

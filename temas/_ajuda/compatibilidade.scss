@@ -1,0 +1,85 @@
+/**
+ * @Autor	: Diego Lepera
+ * @E-mail	: d_lepera@hotmail.com
+ * @Projeto	: FrameworkDL
+ * @Data	: 18/12/2014 17:05:58
+ */
+
+/**
+ *  Flex
+ *  -------
+ *  Transformar uma caixa em uma caixa flexivel
+ */
+@mixin flexBox() {
+    display: -webkit-flex;
+    /* display: -o-flex;
+    display: -moz-flex;
+    display: -ms-flex; */
+    display: flex;
+}
+
+/**
+ *  Flex
+ *  -------
+ *  Definir as propriedades dos itens flexiveis
+ */
+@mixin _flex($v) {
+    -webkit-flex: $v;
+    flex: $v;
+}
+
+/**
+ *  Flex
+ *  -------
+ *  Definir o comportamento dos itens flexiveis
+ */
+@mixin flexFlow($v) {
+    -webkit-flex-flow: $v;
+    flex-flow: $v;
+}
+
+/**
+ *  Tamanho
+ *  ----------
+ *  Configurar como o tamanho de um elemento
+ *  deve ser configurado
+ */
+@mixin boxSizing($v:border-box) {
+    -webkit-box-sizing: $v;
+    -moz-box-sizing: $v;
+    box-sizing: $v;
+}
+
+/**
+ *  Transformar
+ *  ----------
+ *  Incluir efeitos no objeto
+ */
+@mixin _transform($v) {
+    -webkit-transform: $v;
+    -moz-transform: $v;
+    -ms-transform: $v;
+    transform: $v;
+}
+
+/**
+ *  Animar
+ *  ----------
+ *  Efeito de transicao
+ */
+@mixin _transition($v: all 1s) {
+    -webkit-transition: $v;
+    -o-transition: $v;
+    -moz-transition: $v;
+    transition: $v;
+}
+
+/**
+ * Aplicar uma animação
+ */
+@mixin _animation($v) {
+    -webkit-animation: $v;
+    -moz-animation: $v;
+    -o-animation: $v;
+    animation: $v;
+}

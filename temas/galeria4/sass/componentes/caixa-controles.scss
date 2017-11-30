@@ -1,0 +1,40 @@
+// Configurações ------------------------------------------------------------ //
+$seletor: '.caixa-controles';
+
+// Componentes -------------------------------------------------------------- //
+#{$seletor} {
+    > .controle {
+        // Posicionamento
+        position: absolute;
+        top: 50%;
+
+        // Transformar
+        transform: translateY(-50%);
+
+        // Texto
+        color: #FFF;
+        font: 170px 'Savoye LET';
+
+        // Visual
+        opacity: .3;
+
+        // Transições
+        transition: opacity .5s;
+
+        &:hover {
+            // Visual
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        &.-anterior {
+            // Posicionamento
+            left: 3%;
+        }
+
+        &.-proxima {
+            // Posicionamento
+            right: 3%;
+        }
+    }
+}
