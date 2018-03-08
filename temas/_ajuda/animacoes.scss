@@ -1,0 +1,183 @@
+/**
+ * @Autor	: Diego Lepera
+ * @E-mail	: dlepera88@gmail.com
+ * @Projeto	: FrameworkDL
+ * @Data	: 26/07/2015 11:42:00
+ */
+
+
+/* fadein ----------------------------------------------------------------------------------------------------------- */
+@mixin fadein(){
+	from {
+		/* Aparência */
+		opacity: 0;
+	}
+
+	to {
+		/* Aparência */
+		opacity: 100;
+	}
+}
+
+@-webkit-keyframes fadein{ @include fadein(); }
+@-moz-keyframes fadein{ @include fadein(); }
+@-o-keyframes fadein{ @include fadein(); }
+@-ms-keyframes fadein{ @include fadein(); }
+@keyframes fadein{ @include fadein(); }
+
+
+
+/* fadeout ---------------------------------------------------------------------------------------------------------- */
+@mixin fadeout(){
+	from {
+		/* Aparência */
+		opacity: 1;
+	}
+
+	to {
+		/* Aparência */
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes fadeout{ @include fadeout(); }
+@-moz-keyframes fadeout{ @include fadeout(); }
+@-o-keyframes fadeout{ @include fadeout(); }
+@-ms-keyframes fadeout{ @include fadeout(); }
+@keyframes fadeout{ @include fadeout(); }
+
+
+
+/* para baixo ------------------------------------------------------------------------------------------------------- */
+@mixin para-baixo(){
+	from {
+		/* Posicionamento */
+		margin-top: -100%;
+	}
+
+	to {
+		/* Posicionamento */
+		margin-top: 0;
+	}
+}
+
+@-webkit-keyframes para-baixo{ @include para-baixo(); }
+@-moz-keyframes para-baixo{ @include para-baixo(); }
+@-o-keyframes para-baixo{ @include para-baixo(); }
+@-ms-keyframes para-baixo{ @include para-baixo(); }
+@keyframes para-baixo{ @include para-baixo(); }
+
+
+
+/* para cima -------------------------------------------------------------------------------------------------------- */
+@mixin para-cima(){
+	from {
+		/* Posicionamento */
+		margin-top: 100%;
+	}
+
+	to {
+		/* Posicionamento */
+		margin-top: 0;
+	}
+}
+
+@-webkit-keyframes para-cima{ @include para-cima(); }
+@-moz-keyframes para-cima{ @include para-cima(); }
+@-o-keyframes para-cima{ @include para-cima(); }
+@-ms-keyframes para-cima{ @include para-cima(); }
+@keyframes para-cima{ @include para-cima(); }
+
+
+
+/* para direita ----------------------------------------------------------------------------------------------------- */
+@mixin para-direita(){
+	from {
+		/* Posicionamento */
+		left: -100%;
+	}
+
+	to {
+		/* Posicionamento */
+		left: 0;
+	}
+}
+
+@-webkit-keyframes para-direita{ @include para-direita(); }
+@-moz-keyframes para-direita{ @include para-direita(); }
+@-o-keyframes para-direita{ @include para-direita(); }
+@-ms-keyframes para-direita{ @include para-direita(); }
+@keyframes para-direita{ @include para-direita(); }
+
+
+
+/* para esquerda ---------------------------------------------------------------------------------------------------- */
+@mixin para-esquerda(){
+	from {
+		/* Posicionamento */
+		right: -100%;
+	}
+
+	to {
+		/* Posicionamento */
+		right: 0;
+	}
+}
+
+@-webkit-keyframes para-esquerda{ @include para-esquerda(); }
+@-moz-keyframes para-esquerda{ @include para-esquerda(); }
+@-o-keyframes para-esquerda{ @include para-esquerda(); }
+@-ms-keyframes para-esquerda{ @include para-esquerda(); }
+@keyframes para-esquerda{ @include para-esquerda(); }
+
+
+
+/* para direita passando -------------------------------------------------------------------------------------------- */
+@mixin para-direita-passando(){
+	0%{
+		/* Posicionamento */
+		left: -100%;
+	}
+
+	66%{
+		/* Posicionamento */
+		left: 10%;
+	}
+
+	100%{
+		/* Posicionamento */
+		left: 0;
+	}
+}
+
+@-webkit-keyframes para-direita-passando{ @include para-direita-passando(); }
+@-moz-keyframes para-direita-passando{ @include para-direita-passando(); }
+@-o-keyframes para-direita-passando{ @include para-direita-passando(); }
+@-ms-keyframes para-direita-passando{ @include para-direita-passando(); }
+@keyframes para-direita-passando{ @include para-direita-passando(); }
+
+
+
+/* para esquerda passando ------------------------------------------------------------------------------------------- */
+@mixin para-esquerda-passando(){
+	0%{
+		/* Posicionamento */
+		right: -100%;
+	}
+
+	66%{
+		/* Posicionamento */
+		right: 10%;
+	}
+
+	100%{
+		/* Posicionamento */
+		right: 0;
+	}
+}
+
+@-webkit-keyframes para-esquerda-passando{ @include para-esquerda-passando(); }
+@-moz-keyframes para-esquerda-passando{ @include para-esquerda-passando(); }
+@-o-keyframes para-esquerda-passando{ @include para-esquerda-passando(); }
+@-ms-keyframes para-esquerda-passando{ @include para-esquerda-passando(); }
+@keyframes para-esquerda-passando{ @include para-esquerda-passando(); }

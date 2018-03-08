@@ -1,0 +1,52 @@
+// KeyFrames -------------------------------------------------------------------------------------------------------- //
+@mixin todosKeyFrames($animacao) {
+    @keyframes #{$animacao} {
+        @content;
+    }
+
+    @-webkit-keyframes #{$animacao} {
+        @content;
+    }
+
+    @-moz-keyframes #{$animacao} {
+        @content;
+    }
+
+    @-ms-keyframes #{$animacao} {
+        @content;
+    }
+
+    @-o-keyframes #{$animacao} {
+        @content;
+    }
+
+    @-khtml-keyframes #{$animacao} {
+        @content;
+    }
+}
+
+// Fade in ------------------------------------------------------------------ //
+@include todosKeyFrames ('fade-in') {
+    from {
+        // Visual
+        opacity: .4;
+    }
+
+    to {
+        // Visual
+        opacity: 1;
+    }
+}
+
+// Fade out ----------------------------------------------------------------- //
+@include todosKeyFrames ('fade-out') {
+    from {
+        // Visual
+        opacity: 1;
+    }
+
+    to {
+        // Visual
+        opacity: 0;
+    }
+}
