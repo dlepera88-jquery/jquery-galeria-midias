@@ -58,7 +58,7 @@
             // Verificar se esse mesmo arquivo já não foi carregado.
             // FIXME: Quando é utilizado ajax para carregar o plugin, o tema pode ser carregado várias
             // vezes, duplicando as folhas de estilo no HTML final.
-            if($('link[rel="stylesheet"][href="' + css_tema + '"]').length < 0) { 
+            if($('link[rel="stylesheet"][href="' + css_tema + '"]').length < 1) { 
                 $.get(css_tema, function () {
                     var $link = $(document.createElement('link')).attr({
                         rel:    'stylesheet',
@@ -102,13 +102,14 @@
     var controle = {
         iniciarContagemTroca: function (tempo, animacao) {
             if (tempo > 0) {
-                var $this = this;
+                var $this = this, 
+                    id = $(this).attr('id') || this.index;
 
-                clearTimeout($.fn.galeriaMidias.intervalos[this.index()]);
-                $.fn.galeriaMidias.intervalos[this.index()] = setTimeout(function () {
+                clearTimeout($.fn.galeriaMidias.intervalos[id]);
+                $.fn.galeriaMidias.intervalos[id] = setTimeout(function () {
                     controle.proxima.apply($this, [tempo, animacao]);
                 }, tempo);
-
+                
                 this.find('> .barra-tempo > span').stop().css('width', 0).animate({
                     width: '100%'
                 }, tempo);
@@ -209,8 +210,8 @@
      * @return {Object.jQuery} A instância jQuery com os elementos atualizados
      */
     $.fn.galeriaMidias = function (opcoes) {
-        opcoes = $.extend(true, $.fn.galeriaMidias.opcoesPadrao, opcoes);
-
+        opcoes = $.extend({}, $.fn.galeriaMidias.opcoesPadrao, opcoes);
+        
         // Carregar o arquivo CSS com o tema solicitado
         fArquivos.carregarTema(opcoes.tema);
 
@@ -282,7 +283,7 @@
      * Array para armazenar os intervalos de troca
      * @type {Array}
      */
-    $.fn.galeriaMidias.intervalos = [];
+    $.fn.galeriaMidias.intervalos = {};
 
     /**
      * Opções padrão para o funcionamento do plugin
