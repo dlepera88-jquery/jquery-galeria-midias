@@ -36,330 +36,116 @@
 /* global $, jQuery */
 
 // Verificar se o jQuery foi inicializado
+import {Galeria} from "./src/Galeria";
+
 if (jQuery === undefined) {
     console.warn('[Plugin $.fn.galeriaMidias] O jQuery ainda não foi inciado.\nPara utilizar esse plugin é necessário inicializar o jQuery antes.');
 } // Fim if
 
-(function ($) {
-    const fArquivos = {
-        __DIR__: function () {
-            // Dessa forma, retorna o src relativo
-            let script_src = $('script[src*="jquery-galeria-midias"]').attr('src');
-            return script_src.substring(0, script_src.lastIndexOf('/')) || '.';
-        },
+import {Tema} from './src/Tema';
 
-        /**
-         * Carregar o tema solicitado pelo desenvolvedor
-         * @param  {String} tema Nome do tema
-         */
-        carregarTema: function (tema) {
-            // Carregar o arquivo CSS com o tema solicitado
-            const css_tema = fArquivos.__DIR__() + '/temas/' + tema + '/css/galeriamidias.tema.css';
-            const $arquivos_css_carregados = $('link[rel="stylesheet"]');
-
-            // Verificar se esse mesmo arquivo já não foi carregado.
-            // @fixme: Quando é utilizado ajax para carregar o plugin, o tema pode ser carregado várias
-            // vezes, duplicando as folhas de estilo no HTML final.
-            if ($arquivos_css_carregados.filter('[href="' + css_tema + '"]').length < 1) {
-                $.get(css_tema, function () {
-                    const $link = $(document.createElement('link')).attr({
-                        rel: 'stylesheet',
-                        media: 'all',
-                        href: css_tema
-                    });
-
-                    if ($arquivos_css_carregados.length > 0) {
-                        $link.insertAfter($arquivos_css_carregados.last());
-                    } else {
-                        $link.appendTo($('head'));
-                    } // Fim if
-                }).fail(function () {
-                    console.warn('Não foi possível carregar o arquivo %s.', css_tema);
-                });
-            } // Fim if
-        } // Fim function carregarTema
-    };
-
-    const diversos = {
-        /**
-         * Calcula o tempo total de uma determinada animação
-         * @return number Retorna o tempo total da animação em milessegundos
-         * @param animacao
-         */
-        obterTempoAnimacao: function (animacao) {
-            let total = 0;
-
-            animacao.match(/[0-9.]+s/g).forEach(function (valor) {
-                total += parseFloat(valor);
-            });
-
-            return total * 1000;
-        }
-    };
-
+/**
+ * Gerar a galeria de mídias (imagens e vídeos)
+ * @param opcoes
+ * @returns {*}
+ */
+export const galeriaMidias = {
     /**
-     * Controles da galeria
-     * @type {Object}
-     */
-    const controle = {
-        iniciarContagemTroca: function (tempo, animacao) {
-            if (tempo > 0) {
-                const $this = $(this);
-                const id = $this.attr('id') || this.index;
-
-                clearTimeout($.fn.galeriaMidias.intervalos[id]);
-                $.fn.galeriaMidias.intervalos[id] = setTimeout(function () {
-                    controle.proxima.apply($this, [tempo, animacao]);
-                }, tempo);
-
-                $this.find('> .barra-tempo > span').stop().css('width', 0).animate({
-                    width: '100%'
-                }, tempo);
-            } // Fim if
-        },
-
-        /**
-         * Trocar a visualização da mídia atual por outra
-         * @param $atual
-         * @param $nova
-         * @param animacao
-         * @returns {null}
-         */
-        trocarMidia: function ($atual, $nova, animacao) {
-            const conf_animacao = typeof animacao;
-
-            if (conf_animacao === 'string' || conf_animacao === 'object') {
-                let animacao_entrada;
-                let animacao_saida;
-                let tempo_saida;
-
-                if (conf_animacao === 'string') {
-                    animacao_entrada = animacao_saida = animacao;
-                } else {
-                    animacao_entrada = animacao.entrada;
-                    animacao_saida = animacao.saida;
-                } // Fim if ... else
-
-                // Mostrar a nova mídia
-                $nova.css({
-                    '-webkit-animation': animacao_entrada,
-                    animation: animacao_entrada,
-                    display: 'block'
-                });
-
-                // Ocultar a mídia atual
-                $atual.css({
-                    '-webkit-animation': animacao_saida,
-                    animation: animacao_saida
-                });
-
-                // Tirar a animação de saída
-                tempo_saida = diversos.obterTempoAnimacao(animacao_saida);
-                setTimeout(function () {
-                    $atual.css({
-                        '-webkit-animation': '',
-                        animation: '',
-                        display: 'none'
-                    });
-                }, tempo_saida);
-
-                return null;
-            } // Fim if
-
-            $atual.css('display', 'none');
-            $nova.css('display', 'block');
-        },
-
-        /**
-         * Mostrar a próxima mídia da galeria
-         * @param tempo_troca
-         * @param animacao
-         */
-        proxima: function (tempo_troca, animacao) {
-            const $midias = this.find('figure, video');
-            const $atual = $midias.filter(':visible');
-            const qtde_midias = $midias.length - 1;
-            const index_atual = $atual.index();
-            let index_proxima = 0;
-
-            if (index_atual < qtde_midias) {
-                index_proxima = index_atual + 1;
-            } // Fim if
-
-            controle.trocarMidia.apply(this, [$atual, $midias.eq(index_proxima), animacao]);
-            controle.iniciarContagemTroca.apply(this, [tempo_troca, animacao]);
-        },
-
-        /**
-         * Mostrar a mídia anterior da galeria
-         * @param tempo_troca
-         * @param animacao
-         */
-        anterior: function (tempo_troca, animacao) {
-            const $midias = this.find('figure, video');
-            const $atual = $midias.filter(':visible');
-            const index_atual = $atual.index();
-            let index_anterior = index_atual > 0 ? index_atual - 1 : $midias.length - 1;
-
-            controle.trocarMidia($atual, $midias.eq(index_anterior), animacao);
-            controle.iniciarContagemTroca.apply(this, [tempo_troca, animacao]);
-        },
-
-        /**
-         * Mostrar a primeira mídia da galeria
-         * @param tempo_troca
-         * @param animacao
-         */
-        primeira: function (tempo_troca, animacao) {
-            const $midias = this.find('figure, video');
-            const $atual = $midias.filter(':visible');
-
-            controle.trocarMidia($atual, $midias.eq(0), animacao);
-            controle.iniciarContagemTroca.apply(this, [tempo_troca, animacao]);
-        },
-
-        /**
-         * Mostrar a última mídia da galeria
-         * @param tempo_troca
-         * @param animacao
-         */
-        ultima: function (tempo_troca, animacao) {
-            const $midias = this.find('figure, video');
-            const $atual = $midias.filter(':visible');
-            const ultima_midia = $midias.length - 1;
-
-            controle.trocarMidia($atual, $midias.eq(ultima_midia), animacao);
-            controle.iniciarContagemTroca.apply(this, [tempo_troca, animacao]);
-        }
-    };
-
-    /**
-     * Gerar a galeria de mídias (imagens e vídeos)
-     * @param opcoes
-     * @returns {*}
-     */
-    $.fn.galeriaMidias = function (opcoes) {
-        opcoes = $.extend({}, $.fn.galeriaMidias.opcoesPadrao, opcoes);
-
-        // Carregar o arquivo CSS com o tema solicitado
-        fArquivos.carregarTema(opcoes.tema);
-
-        /**
-         * Quantidade de fotos a serem incluídas na galeria
-         * @type {Number}
-         */
-        // var qtde_midias = opcoes.midias.length;
-
-        return this.each(function () {
-            const $this = $(this);
-
-            /*
-             * Adicionar a classe e o nome do tema para carregar a aparência correta
-             */
-            $this.addClass('__jQuery-galeriaMidias ' + opcoes.tema);
-
-            // Habilitar o slideshow
-            if (opcoes.slideshow > 0) {
-                if (opcoes.barraTempo) {
-                    $(document.createElement('div'))
-                        .addClass('barra-tempo')
-                        .html('<span style="width:0"></span>')
-                        .appendTo($this);
-                } // Fim if
-
-                controle.iniciarContagemTroca.apply($this, [opcoes.slideshow, opcoes.animacao]);
-            } // Fim if
-
-            // Adicionar os controles
-            if (opcoes.controles !== null && opcoes.controles !== '') {
-                const $controles = $(document.createElement('div')).addClass('caixa-controles').appendTo($this);
-                const $botao = $(document.createElement('a')).addClass('controle');
-                const evt_data = {$galeria: $this, tempo: opcoes.slideshow, animacao: opcoes.animacao};
-
-                if (opcoes.controles.indexOf('primeira') > -1) {
-                    $botao.clone().addClass('-primeira').attr('title', 'Primeira').text('<<')
-                        .on('click.' + $.fn.galeriaMidias.evt_ns, evt_data,
-                            function (evt) {
-                                controle.primeira.apply(evt.data.$galeria, [evt.data.tempo, evt.data.animacao]);
-                            }).appendTo($controles);
-                } // Fim if
-
-                if (opcoes.controles.indexOf('anterior') > -1) {
-                    $botao.clone().addClass('-anterior').attr('title', 'Anterior').text('<').on('click.' + $.fn.galeriaMidias.evt_ns, evt_data, function (evt) {
-                        controle.anterior.apply(evt.data.$galeria, [evt.data.tempo, evt.data.animacao]);
-                    }).appendTo($controles);
-                } // Fim if
-
-                if (opcoes.controles.indexOf('proxima') > -1) {
-                    $botao.clone().addClass('-proxima').attr('title', 'Próxima').text('>').on('click.' + $.fn.galeriaMidias.evt_ns, evt_data, function (evt) {
-                        controle.proxima.apply(evt.data.$galeria, [evt.data.tempo, evt.data.animacao]);
-                    }).appendTo($controles);
-                } // Fim if
-
-                if (opcoes.controles.indexOf('ultima') > -1) {
-                    $botao.clone().addClass('-ultima').attr('title', 'Última').text('>>').on('click.' + $.fn.galeriaMidias.evt_ns, evt_data, function (evt) {
-                        controle.ultima.apply(evt.data.$galeria, [evt.data.tempo, evt.data.animacao]);
-                    }).appendTo($controles);
-                } // Fim if
-            } // Fim if
-
-            return $this;
-        });
-    };
-
-    /**
-     * Namespace dos eventos aplicados pelo plugin
+     * Nome do tema a ser carregado para os elementos da galeria
      * @type {String}
      */
-    $.fn.galeriaMidias.evt_ns = '__galeriaMidias';
+    tema: 'galeria4',
 
     /**
-     * Array para armazenar os intervalos de troca
-     * @type {Array}
+     * Tempo para troca de uma mídia pra outra. Quando definido como 0 (zero)
+     * as mídias não são passadas automaticamente
+     * @type number
      */
-    $.fn.galeriaMidias.intervalos = {};
+    slideshow: 0,
 
     /**
-     * Opções padrão para o funcionamento do plugin
+     * Exibe uma barra de tempo para troca da mídia. Só tem efeito se o slideshow
+     * estiver ativo
+     * @type {Boolean}
+     */
+    barraTempo: false,
+
+    /**
+     * Controles a serem adicionados na galeria. Informe o nome dos controles
+     * separados por vírgula: 'anterior, proxima, primeira, ultima'. Não importa
+     * a ordem. Se definido como nulo ou uma string fazia, nenhum Controle é
+     * adicionado
+     * @type {String}
+     */
+    controles: null,
+
+    /**
+     * Animação (CSS3) utilizada para fazer a troca das mídias. Pode ser informada
+     * uma única animação em formato de string 'nome-da-animacao tempo' ou
+     * um objeto especificando uma animação para entrada e outra para saída
+     * { entrada: 'nome-da-animacao tempo', saida: 'nome-da-animacao tempo' }
+     * @type {Object|String}
+     */
+    animacao: {entrada: 'fade-in .5s linear', saida: 'fade-out .5s linear .2s'},
+
+    /**
+     * Intervalos de troca das fotos.
      * @type {Object}
      */
-    $.fn.galeriaMidias.opcoesPadrao = {
-        /**
-         * Nome do tema a ser carregado para os elementos da galeria
-         * @type {String}
-         */
-        tema: 'galeria4',
+    intervalos_troca: {},
 
-        /**
-         * Tempo para troca de uma mídia pra outra. Quando definido como 0 (zero)
-         * as mídias não são passadas automaticamente
-         * @type number
-         */
-        slideshow: 0,
+    /**
+     * Namespace utilizado para os eventos da galeria
+     * @type {String}
+     * @deprecated
+     */
+    evt_namespace: '__galeriaMidias',
 
-        /**
-         * Exibe uma barra de tempo para troca da mídia. Só tem efeito se o slideshow
-         * estiver ativo
-         * @type {Boolean}
-         */
-        barraTempo: false,
+    /**
+     * Iniciar a galeria de mídias
+     * @param {jQuery} $jGaleria
+     * @param {Object} opcoes
+     */
+    init: function ($jGaleria, opcoes) {
+        this.tema = opcoes.tema || this.tema;
+        this.slideshow = opcoes.slideshow || this.slideshow;
+        this.barraTempo = opcoes.barraTempo || this.barraTempo;
+        this.controles = opcoes.controles || this.controles;
+        this.animacao = opcoes.animacao || this.animacao;
 
-        /**
-         * Controles a serem adicionados na galeria. Informe o nome dos controles
-         * separados por vírgula: 'anterior, proxima, primeira, ultima'. Não importa
-         * a ordem. Se definido como nulo ou uma string fazia, nenhum controle é
-         * adicionado
-         * @type {String}
-         */
-        controles: null,
+        this.carregarTema();
 
-        /**
-         * Animação (CSS3) utilizada para fazer a troca das mídias. Pode ser informada
-         * uma única animação em formato de string 'nome-da-animacao tempo' ou
-         * um objeto especificando uma animação para entrada e outra para saída
-         * { entrada: 'nome-da-animacao tempo', saida: 'nome-da-animacao tempo' }
-         * @type {Object|String}
-         */
-        animacao: {entrada: 'fade-in .5s linear', saida: 'fade-out .5s linear .2s'}
-    };
-})(jQuery);
+        $jGaleria.each(function () {
+            const galeria = new Galeria(this, Tema.nome);
+
+            if (galeriaMidias.slideshow > 0) {
+                galeria.iniciarSlideshow(
+                    galeriaMidias.slideshow,
+                    galeriaMidias.animacao,
+                    galeriaMidias.barraTempo
+                );
+            }
+
+            if (galeriaMidias.controles !== null && galeriaMidias.controles !== '') {
+                galeria.adicionarControles(
+                    galeriaMidias.controles,
+                    galeriaMidias.animacao,
+                    galeriaMidias.slideshow
+                );
+            }
+        });
+    },
+
+    carregarTema: function () {
+        // Carregar o arquivo CSS com o tema solicitado
+        Tema.init(this.tema);
+        Tema.carregarTema();
+    }
+};
+
+$.fn.galeriaMidias = function (opcoes) {
+    const $this = $(this);
+    galeriaMidias.init($this, opcoes);
+    return $this;
+};
+

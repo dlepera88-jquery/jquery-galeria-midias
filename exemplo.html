@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Exemplo Galeria de Mídias em jQuery</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #galeria-midias {
+            width: 800px;
+            height: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="galeria-midias">
+        <figure>
+            <img src="midias/fotos/exemplo-paisagem-1.jpg" alt="Foto de exemplo (paisagem 1)">
+        </figure>
+        <figure>
+            <img src="midias/fotos/exemplo-retrato-1.jpg" alt="Foto de exemplo (retrato 1)">
+        </figure>
+        <figure>
+            <img src="midias/fotos/exemplo-paisagem-2.jpg" alt="Foto de exemplo (paisagem 2)">
+        </figure>
+    </div>
+
+    <script src="vendor/components/jquery/jquery.min.js"></script>
+    <script type="module" src="jquery.galeriamidias.plugin.js"></script>
+    <script type="module">
+        $('#galeria-midias').galeriaMidias({
+            slideshow: 3000,
+            barraTempo: true,
+            controles: 'anterior, proxima'
+        });
+    </script>
+</body>
+</html>

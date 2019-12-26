@@ -17,7 +17,13 @@ $tema: '.galeria4';
     // Posicionamento
     position: relative;
 
+    // Visual
+    background: #333;
+
     > figure, > video {
+        // Margens
+        margin: 0;
+
         // Tamanho
         width: 100%;
         height: 100%;
